@@ -1,0 +1,63 @@
+Since I left you, I have been constantly depressed. My happiness is to be near you. Incessantly I live over in my memory your caresses, your tears, your affectionate solicitude. The charms of the incomparable Josephine kindle continually a burning and a glowing flame in my heart.... I thought that I loved you months ago, but since my separation from you I feel that I love you a thousand fold more. Each day since I knew you, have I adored you more and more.
+It seems to me, to myself, that no man was ever before to any woman what you are to me — the fullness must be in proportion, you know, to the vacancy...and only I know what was behind — the long wilderness without the blossoming rose...and the capacity for happiness, like a black gaping hole, before this silver flooding. Is it wonderful that I should stand as in a dream, and disbelieve--not you--but my own fate? Was ever any one taken suddenly from a lampless dungeon and placed upon the pinnacle of a mountain, without the head turning round and the heart turning faint, as mine do? And you love me more, you say? .... How shall I ever prove what my heart is to you? How will you ever see it as I feel it?
+Though still in bed, my thoughts go out to you, my Immortal Beloved, Be calm — love me — today — yesterday — what tearful longings for you — you — you — my life — my all — farewell. Oh continue to love me — never misjudge the most faithful heart of your beloved. Ever thine. Ever mine. Ever ours.
+My Own Boy,Your sonnet is quite lovely, and it is a marvel that hose red-roseleaf lips of yours should be made no less for the madness of music and song than for the madness of kissing. Your slim gilt soul walks between passion and poetry. I know Hyacinthus, whom Apollo loved so madly, was you in Greek days. Why are you alone in London, and when do you go to Salisbury? Do go there to cool your hands in the grey twilight of Gothic things, and come here whenever you like. It is a lovely place and lacks only you; but go to Salisbury first.Always, with undying love,Yours, Oscar
+We get old and get used to each other. We think alike. We read each other's minds. We know what the other one wants without asking. Sometimes we irritate each other a little bit. Maybe sometimes take each other for granted.But once in a while, like today, I meditate on it and realize how lucky I am to share my life with the greatest woman I ever met. You still fascinate and inspire me. You influence me for the better. You're the object of my desire, the #1 earthly reason for my existence. I love you very much.
+Should I draw you the picture of my Heart, it would be what I hope you would Love; tho it contained nothing new; the early possession you obtained there; and the absolute power you have ever maintained over it; leaves not the smallest space unoccupied. I look back to the early days of our acquaintance; and Friendship, as to the days of Love and Innocence; and with an indescribable pleasure I have seen near a score of years roll over our Heads, with an affection heightened and improved by time — nor have the dreary years of absence in the smallest degree effaced from my mind the Image of the dear untitled man to whom I gave my Heart.
+How did I love before I knew you — before I possessed your affection! I reckon upon your love as something that is to endure when everything that can perish has perished — though my trust is sometimes mingled with fear, because I feel myself unworthy of your love. But if I am worthy of it you will always love me; and if there be anything good and pure in me, it will be proved by my always loving you.
+My love has made me selfish. I cannot exist without you — I am forgetful of every thing but seeing you again — my Life seems to stop there — I see no further. You have absorb'd me. I have a sensation at the present moment as though I was dissolving — I should be exquisitely miserable without the hope of soon seeing you. I should be afraid to separate myself far from you....I would be martyr'd for my Religion — Love is my religion — I could die for that – I could die for you. My Creed is Love and you are it's only tenet — You have ravish'd me away by a Power I cannot resist.
+No written words can adequately express our deep, deep love. We know how great you are and we, the children and Dad, will try to be as strong as you. Our faith in you and God will sustain us. Our total love for you is everlasting.We will be at your side with our love for a wonderful Mom.
+On turning over in my mind the contents of your last letters, I have put myself into great agony, not knowing how to interpret them, whether to my disadvantage, as you show in some places, or to my advantage, as I understand them in some others, beseeching you earnestly to let me know expressly your whole mind as to the love between us two. It is absolutely necessary for me to obtain this answer, having been for above a whole year stricken with the dart of love, and not yet sure whether I shall fail of finding a place in your heart and affection.
+little girl...Happiness is within you.... So unlock the chains from your heart and let yourself grow like the sweet flower you are...I know the answer — Just spread your wings and set yourself FREE
+# Install
+#install.packages("tm")  # for text mining
+#install.packages("SnowballC") # for text stemming
+#install.packages("wordcloud") # word-cloud generator 
+#install.packages("RColorBrewer") # color palettes
+# Load
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("RColorBrewer")
+
+text  = readLines(file.choose())
+
+# Read the text file from internet
+#filePath = "filePath"
+#text = readLines(filePath)
+
+# Load the data as a corpus
+docs = Corpus(VectorSource(text))
+
+inspect(docs)
+
+# Remove numbers
+docs = tm_map(docs, removeNumbers)
+# Remove english common stopwords
+docs = tm_map(docs, removeWords, stopwords("english"))
+# Text stemming
+docs = tm_map(docs, stemDocument)
+# Remove your own stop word
+# specify your stopwords as a character vector
+docs = tm_map(docs, removeWords, c("ever")) 
+# Remove punctuations
+docs = tm_map(docs, removePunctuation)
+# Eliminate extra white spaces
+docs = tm_map(docs, stripWhitespace)
+
+
+dataCloud = TermDocumentMatrix(docs)
+dataCloud = as.matrix(dataCloud)
+dataCloud = sort(rowSums(dataCloud),decreasing=TRUE)
+dataCloud = data.frame(word = names(dataCloud),freq = dataCloud)
+
+
+set.seed(1234)
+wordcloud(words = dataCloud$word, freq = dataCloud$freq, min.freq = 1,
+          max.words=200, random.order=FALSE)
+
+wordcloud(words = dataCloud$word, freq = dataCloud$freq, min.freq = 1,
+          max.words=200, random.order=FALSE, colors=brewer.pal(8, "Dark2"))
+
+
+# The content is adapted from http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know
